@@ -1,9 +1,11 @@
 class CallsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_call, only: %i[ show edit update destroy ]
 
   # GET /calls or /calls.json
   def index
-    @calls = Call.all
+    @client_id = params[:client_id]
+    @calls = Call.where(client_id: @client_id)
   end
 
   # GET /calls/1 or /calls/1.json

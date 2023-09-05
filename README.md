@@ -39,7 +39,62 @@
 	o
 	- Intslacion de gemas
 		https://asalvarez.notion.site/Instalaci-n-de-Bootstrap-cdd64efa580842808d91230dcf7d80ef
-		
+
+17.- Home y Login
+    Crea una ruta en config/routes.rb para la página de inicio:
+    devise_scope :user do
+        root to: 'devise/sessions#new'
+    end
+18.- Registrar Operadores:
+    a.- Por app.
+        Registrarlo atraves del formulario de device.
+    b.- por consola.
+        rails c
+        User.create(email: "nombre",password: "123456")
+    c.- por seed
+            Agregarlo dentro seed.rb User.create(email: "nombre",password: "123456")
+
+
+19.- Agregar combobox para motivo en agregar llamada
+Si deseas agregar un campo de motivo (reason) a la creación de llamadas con un combobox, debes modificar la vista de creación de llamadas (app/views/calls/_form.html.erb). Puedes usar un select para esto.
+
+<div class="field">
+  <%= f.label :reason %>
+  <%= f.select :reason, ["Requerimiento", "Reclamo", "Consulta"] %>
+</div>
+Luego, en el modelo Call (app/models/call.rb), puedes validar que el motivo esté incluido en las opciones especificadas:
+
+validates :reason, inclusion: { in: %w[Requerimiento Reclamo Consulta] }
+19.- Estilos
+Para agregar estilos a tus vistas, puedes utilizar CSS o un framework como Bootstrap. Si ya has agregado Bootstrap a tu aplicación, puedes personalizar los estilos de las vistas específicas. Para modificar los estilos de las vistas de Client y Call, debes editar los archivos de vistas correspondientes en app/views/clients y app/views/calls y agregar clases de Bootstrap o tus propias reglas CSS según sea necesario.	
+Configurar pagy en tu controlador:
+
+20.- En el controlador donde desees agregar la paginación (por ejemplo, CallsController), primero importa pagy y configura la paginación en tu acción index:
+
+ApplicationController:
+    Pagy::DEFAULT[:items] = 10
+    include Pagy::Backend
+
+ApplicationHelper:
+    include Pagy::Frontend
+
+class CallsController < ApplicationController
+  def index
+    @calls = Call.all
+    @pagy, @calls = pagy(@calls)
+  end
+end
+Aquí, hemos utilizado Call.all para obtener todas las llamadas y luego hemos usado pagy(@calls) para aplicar la paginación a esa lista.
+
+Agregar la paginación en la vista:
+
+En la vista donde deseas mostrar la paginación (por ejemplo, app/views/calls/index.html.erb), puedes agregar la paginación de la siguiente manera:
+
+<div class="pagination">
+  <%= pagy_nav(@pagy) %>
+</div>
+
+Esto generará los enlaces de paginación para que los usuarios puedan navegar entre las páginas.
 ===== Pendientes:
 
 - Home a logging 
